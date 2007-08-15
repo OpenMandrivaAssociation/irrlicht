@@ -19,7 +19,7 @@ BuildRequires:		zlib-devel
 BuildRequires:		libjpeg-devel
 BuildRequires:		libpng-devel
 BuildRequires:		mesa-common-devel
-Requires:		%{libname} = %{version}-%{release}
+#Requires:		%{libname} = %{version}-%{release}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-buildroot
 
 %description
@@ -68,19 +68,19 @@ Static files for Irrlicht 3D engine.
 #%description -n %{name}-examples
 #Demos and examples for the Irrlicht 3D engine.
 
-%package -n %{name}-media
-Summary:	Some media files for Irrlicht 3D engine
-Group:		Development/C
+#%package -n %{name}-media
+#Summary:	Some media files for Irrlicht 3D engine
+#Group:		Development/C
 
-%description -n %{name}-media
-Some media files for Irrlicht tools and demos.
+#%description -n %{name}-media
+#Some media files for Irrlicht tools and demos.
 
-%package -n %{name}-doc
-Summary:	User documentation for the Irrlicht 3D engine
-Group:		Documentation/Other
+#%package -n %{name}-doc
+#Summary:	User documentation for the Irrlicht 3D engine
+#Group:		Documentation/Other
 
-%description -n %{name}-doc
-User documentation for the Irrlicht 3D engine.
+#%description -n %{name}-doc
+#User documentation for the Irrlicht 3D engine.
 
 %prep
 %setup -q
@@ -89,8 +89,8 @@ User documentation for the Irrlicht 3D engine.
 %patch2 -p1
 
 %build
-export CFLAGS="%{optflags}"
-export CXXFLAGS="%{optflags}"
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
 export LIBDIR="%{_libdir}"
 
 # really not needed :)
@@ -104,27 +104,16 @@ sed -i -e 's|Demo||g' examples/buildAllExamples.sh
 sed -i -e 's|../../media/|%{_datadir}/irrlicht/|g' tools/GUIEditor/main.cpp
 find ./examples -name *.cpp | xargs sed -i -e 's|../../media/|%{_datadir}/irrlicht/|g'
 
-# pack example-sources
-#tar cj \
-#	--exclude *.cbp \
-#	--exclude *.dev \
-#	--exclude *.dsp \
-#	--exclude *.dsw \
-#	--exclude *.html \
-#	--exclude *.sln \
-#	--exclude *.vcproj \
-#	-f irrlicht-examples-src.tar.bz2 examples/*
-
 # create shared-lib first
 pushd source/Irrlicht
 %make sharedlib
 popd
 
 # create necessary links to avoid linker-error for tools/examples
-pushd lib/Linux
+#pushd lib/Linux
 #ln -s libIrrlicht.so.1.3.0 libIrrlicht.so.1
 #ln -s libIrrlicht.so.1.3.0 libIrrlicht.so
-popd
+#popd
 
 # tools
 #pushd tools
@@ -137,9 +126,9 @@ popd
 #popd
 
 # examples
-pushd examples
-sh buildAllExamples.sh
-popd
+#pushd examples
+#sh buildAllExamples.sh
+#popd
 
 # build static lib
 pushd source/Irrlicht
@@ -192,8 +181,8 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 #install -m 644 irrlicht-examples-src.tar.bz2 %{buildroot}%{_docdir}/Irrlicht-examples
 
 # media
-mkdir -p %{buildroot}%{_datadir}/irrlicht
-install -m 755 media/* %{buildroot}%{_datadir}/irrlicht
+#mkdir -p %{buildroot}%{_datadir}/irrlicht
+#install -m 755 media/* %{buildroot}%{_datadir}/irrlicht
 
 # icons
 #install -dm 755 %{buildroot}%{_iconsdir}/hicolor/{16x16,32x32,48x48}/apps
@@ -247,13 +236,13 @@ install -m 755 media/* %{buildroot}%{_datadir}/irrlicht
 #Categories=Graphics;3Dgraphics;GTK;
 #EOF
 
-%post
-%{update_menus}
-%update_icon_cache hicolor
+#%post
+#%{update_menus}
+#%update_icon_cache hicolor
 
-%postun
-%{clean_menus}
-%clean_icon_cache hicolor
+#%postun
+#%{clean_menus}
+#%clean_icon_cache hicolor
 
 %post -n %{libname} -p /sbin/ldconfig
 
@@ -262,9 +251,9 @@ install -m 755 media/* %{buildroot}%{_datadir}/irrlicht
 %clean
 rm -rf %{buildroot}
 
-%files
-%defattr(-,root,root)
-%doc examples/09.Meshviewer/tutorial.html
+#%files
+#%defattr(-,root,root)
+#%doc examples/09.Meshviewer/tutorial.html
 #%{_bindir}/irrlicht-GUIEditor
 #%{_bindir}/irrlicht-FontTool
 #%{_bindir}/irrlicht-Meshviewer
@@ -296,12 +285,12 @@ rm -rf %{buildroot}
 #%exclude %{_bindir}/irrlicht-Meshviewer
 #%{_bindir}/irrlicht-*
 
-%files -n %{name}-media
-%defattr(-,root,root)
-%dir %{_datadir}/irrlicht
-%{_datadir}/irrlicht/*
+#%files -n %{name}-media
+#%defattr(-,root,root)
+#%dir %{_datadir}/irrlicht
+#%{_datadir}/irrlicht/*
 
-%files -n %{name}-doc
-%defattr(-,root,root)
-%doc doc/irrlicht.chm
-%doc doc/*.txt
+#%files -n %{name}-doc
+#%defattr(-,root,root)
+#%doc doc/irrlicht.chm
+#%doc doc/*.txt
