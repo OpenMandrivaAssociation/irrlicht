@@ -12,7 +12,8 @@ Group:			Graphics
 URL:			http://irrlicht.sourceforge.net/
 Source:			http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.tar.bz2
 Patch0:			%{name}-1.3.1-dimension.patch
-Patch1:			%{name}-1.3.1-makefile.patch
+Patch1:			%{name}-1.3.1-library-makefile.patch
+Patch2:			%{name}-1.3.1-use-system-libs.patch
 BuildRequires:		imagemagick
 BuildRequires:		zlib-devel
 BuildRequires:		libjpeg-devel
@@ -59,13 +60,13 @@ Requires:	%{develname}  = %{version}-%{release}
 %description -n %{staticname}
 Static files for Irrlicht 3D engine.
 
-%package -n %{name}-examples
-Summary:	Demos and examples for the Irrlicht 3D engine
-Group:		Other
-Requires:	%{libname} = %{version}-%{release}
+#%package -n %{name}-examples
+#Summary:	Demos and examples for the Irrlicht 3D engine
+#Group:		Other
+#Requires:	%{libname} = %{version}-%{release}
 
-%description -n %{name}-examples
-Demos and examples for the Irrlicht 3D engine.
+#%description -n %{name}-examples
+#Demos and examples for the Irrlicht 3D engine.
 
 %package -n %{name}-media
 Summary:	Some media files for Irrlicht 3D engine
@@ -85,6 +86,7 @@ User documentation for the Irrlicht 3D engine.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 export CFLAGS="%{optflags}"
@@ -120,19 +122,19 @@ popd
 
 # create necessary links to avoid linker-error for tools/examples
 pushd lib/Linux
-ln -s libIrrlicht.so.1.3.0 libIrrlicht.so.1
-ln -s libIrrlicht.so.1.3.0 libIrrlicht.so
+#ln -s libIrrlicht.so.1.3.0 libIrrlicht.so.1
+#ln -s libIrrlicht.so.1.3.0 libIrrlicht.so
 popd
 
 # tools
-pushd tools
-cd GUIEditor
-%make
-cd ..
-cd IrrFontTool/newFontTool
-%make
-cd ../..
-popd
+#pushd tools
+#cd GUIEditor
+#%make
+#cd ..
+#cd IrrFontTool/newFontTool
+#%make
+#cd ../..
+#popd
 
 # examples
 pushd examples
@@ -146,104 +148,104 @@ make clean
 popd
 
 %install
-install -dm 755 %{buildroot}%{_libdir}
+mkdir -p %{buildroot}%{_libdir}
+
 install -m 644 lib/Linux/libIrrlicht.a %{buildroot}%{_libdir}
 install -m 755  lib/Linux/libIrrlicht.so.%{major}* %{buildroot}%{_libdir}
 
 pushd %{buildroot}%{_libdir}
-ln -s libIrrlicht.so.1.3.0 libIrrlicht.so.1
 ln -s libIrrlicht.so.1.3.0 libIrrlicht.so
 popd
 
 # includes
-install -dm 755 %{buildroot}%{_includedir}/irrlicht
-install -m 644 include/*.h %{buildroot}%{_includedir}/irrlicht
+mkdir -p %{buildroot}%{_includedir}/irrlicht
+cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 
 # tools
-install -dm 755 %{buildroot}%{_bindir}
-install -m 755 tools/GUIEditor/GUIEditor %{buildroot}%{_bindir}/irrlicht-GUIEditor
-install -m 755 bin/Linux/FontTool %{buildroot}%{_bindir}/irrlicht-FontTool
+#install -dm 755 %{buildroot}%{_bindir}
+#install -m 755 tools/GUIEditor/GUIEditor %{buildroot}%{_bindir}/irrlicht-GUIEditor
+#install -m 755 bin/Linux/FontTool %{buildroot}%{_bindir}/irrlicht-FontTool
 
 # examples
-install -dm 755 %{buildroot}%{_bindir}
-ex_list=`ls -1 bin/Linux/??.*`
-for i in $ex_list; do
-	FE=`echo $i | awk 'BEGIN { FS="." }{ print $2 }'`
-	    install -m 755 $i %{buildroot}%{_bindir}/irrlicht-$FE
-done
+#install -dm 755 %{buildroot}%{_bindir}
+#ex_list=`ls -1 bin/Linux/??.*`
+#for i in $ex_list; do
+#	FE=`echo $i | awk 'BEGIN { FS="." }{ print $2 }'`
+#	    install -m 755 $i %{buildroot}%{_bindir}/irrlicht-$FE
+#done
 
 # examples-docs
-pushd examples
-install -dm 755 %{buildroot}%{_docdir}/Irrlicht-examples
-install -m 644 * %{buildroot}%{_docdir}/Irrlicht-examples
+#pushd examples
+#install -dm 755 %{buildroot}%{_docdir}/Irrlicht-examples
+#install -m 644 * %{buildroot}%{_docdir}/Irrlicht-examples
 
 #ex_dir=`find . -name tutorial.html`
 #for i in $ex_dir; do
 #	dir_name=`dirname $i`
 #	install -dm 755 %{buildroot}%{_docdir}/Irrlicht-examples/$dir_name
 #	install -m 644 $i %{buildroot}%{_docdir}/Irrlicht-examples/$dir_name
-done
-rm -r %{buildroot}%{_docdir}/Irrlicht-examples/09.Meshviewer
-popd
+#done
+#rm -r %{buildroot}%{_docdir}/Irrlicht-examples/09.Meshviewer
+#popd
 
 # examples sources
 #install -m 644 irrlicht-examples-src.tar.bz2 %{buildroot}%{_docdir}/Irrlicht-examples
 
 # media
-install -dm 755 %{buildroot}%{_datadir}/irrlicht
+mkdir -p %{buildroot}%{_datadir}/irrlicht
 install -m 755 media/* %{buildroot}%{_datadir}/irrlicht
 
 # icons
-install -dm 755 %{buildroot}%{_iconsdir}/hicolor/{16x16,32x32,48x48}/apps
-convert examples/09.Meshviewer/icon.ico -resize 48x48 %{buildroot}%{_iconsdir}/hicolor/48x48/apps/irrlicht-Meshviewer.png
-convert bin/Win32-gcc/irrlicht.ico -resize 48x48 %{buildroot}%{_iconsdir}/hicolor/48x48/apps/irrlicht.png
+#install -dm 755 %{buildroot}%{_iconsdir}/hicolor/{16x16,32x32,48x48}/apps
+#convert examples/09.Meshviewer/icon.ico -resize 48x48 %{buildroot}%{_iconsdir}/hicolor/48x48/apps/irrlicht-Meshviewer.png
+#convert bin/Win32-gcc/irrlicht.ico -resize 48x48 %{buildroot}%{_iconsdir}/hicolor/48x48/apps/irrlicht.png
 
-convert examples/09.Meshviewer/icon.ico -resize 32x32 %{buildroot}%{_iconsdir}/hicolor/32x32/apps/irrlicht-Meshviewer.png
-convert bin/Win32-gcc/irrlicht.ico -resize 32x32 %{buildroot}%{_iconsdir}/hicolor/32x32/apps/irrlicht.png
+#convert examples/09.Meshviewer/icon.ico -resize 32x32 %{buildroot}%{_iconsdir}/hicolor/32x32/apps/irrlicht-Meshviewer.png
+#convert bin/Win32-gcc/irrlicht.ico -resize 32x32 %{buildroot}%{_iconsdir}/hicolor/32x32/apps/irrlicht.png
 
-convert examples/09.Meshviewer/icon.ico -resize 16x16 %{buildroot}%{_iconsdir}/hicolor/16x16/apps/irrlicht-Meshviewer.png
-convert bin/Win32-gcc/irrlicht.ico -resize 16x16 %{buildroot}%{_iconsdir}/hicolor/16x16/apps/irrlicht.png
+#convert examples/09.Meshviewer/icon.ico -resize 16x16 %{buildroot}%{_iconsdir}/hicolor/16x16/apps/irrlicht-Meshviewer.png
+#convert bin/Win32-gcc/irrlicht.ico -resize 16x16 %{buildroot}%{_iconsdir}/hicolor/16x16/apps/irrlicht.png
 
 # menu
-mkdir -p %{buildroot}%{_datadir}/applications
-cat > %{buildroot}%{_datadir}/applications/irrlicht-GUIEditor.desktop << EOF
-[Desktop Entry]
-Encoding=UTF-8
-Name=Irrlicht GUI Editor
-Comment=Irrlicht GUI Editor
-Exec=%{_bindir}/irrlicht-GUIEditor
-Icon=%{name}.png
-Terminal=false
-Type=Application
-StartupNotify=true
-Categories=Graphics;3DGraphics;GTK;
-EOF
+#mkdir -p %{buildroot}%{_datadir}/applications
+#cat > %{buildroot}%{_datadir}/applications/irrlicht-GUIEditor.desktop << EOF
+#[Desktop Entry]
+#Encoding=UTF-8
+#Name=Irrlicht GUI Editor
+#Comment=Irrlicht GUI Editor
+#Exec=%{_bindir}/irrlicht-GUIEditor
+#Icon=%{name}.png
+#Terminal=false
+#Type=Application
+#StartupNotify=true
+#Categories=Graphics;3DGraphics;GTK;
+#EOF
 
-cat > %{buildroot}%{_datadir}/applications/irrlicht-FontTool.desktop << EOF
-[Desktop Entry]
-Encoding=UTF-8
-Name=Irrlicht Font Tool
-Comment=Irrlicht Font Tool
-Exec=%{_bindir}/irrlicht-FontTool
-Icon=%{name}.png
-Terminal=false
-Type=Application
-StartupNotify=true
-Categories=Graphics;3dGraphics;GTK;
-EOF
+#cat > %{buildroot}%{_datadir}/applications/irrlicht-FontTool.desktop << EOF
+#[Desktop Entry]
+#Encoding=UTF-8
+#Name=Irrlicht Font Tool
+#Comment=Irrlicht Font Tool
+#Exec=%{_bindir}/irrlicht-FontTool
+#Icon=%{name}.png
+#Terminal=false
+#Type=Application
+#StartupNotify=true
+#Categories=Graphics;3dGraphics;GTK;
+#EOF
 
-cat > %{buildroot}%{_datadir}/applications/irrlicht-Meshviewer.desktop << EOF
-[Desktop Entry]
-Encoding=UTF-8
-Name=Irrlicht Mesh Viewer
-Comment=Irrlicht Mesh Viewer
-Exec=%{_bindir}/irrlicht-Meshviewer
-Icon=irrlicht-Meshviewer.png
-Terminal=true
-Type=Application
-StartupNotify=true
-Categories=Graphics;3Dgraphics;GTK;
-EOF
+#cat > %{buildroot}%{_datadir}/applications/irrlicht-Meshviewer.desktop << EOF
+#[Desktop Entry]
+#Encoding=UTF-8
+#Name=Irrlicht Mesh Viewer
+#Comment=Irrlicht Mesh Viewer
+#Exec=%{_bindir}/irrlicht-Meshviewer
+#Icon=irrlicht-Meshviewer.png
+#Terminal=true
+#Type=Application
+#StartupNotify=true
+#Categories=Graphics;3Dgraphics;GTK;
+#EOF
 
 %post
 %{update_menus}
@@ -263,13 +265,13 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %doc examples/09.Meshviewer/tutorial.html
-%{_bindir}/irrlicht-GUIEditor
-%{_bindir}/irrlicht-FontTool
-%{_bindir}/irrlicht-Meshviewer
-%{_datadir}/applications/irrlicht-GUIEditor.desktop
-%{_datadir}/applications/irrlicht-FontTool.desktop
-%{_datadir}/applications/irrlicht-Meshviewer.desktop
-%{_iconsdir}/hicolor/*/apps/*.png
+#%{_bindir}/irrlicht-GUIEditor
+#%{_bindir}/irrlicht-FontTool
+#%{_bindir}/irrlicht-Meshviewer
+#%{_datadir}/applications/irrlicht-GUIEditor.desktop
+#%{_datadir}/applications/irrlicht-FontTool.desktop
+#%{_datadir}/applications/irrlicht-Meshviewer.desktop
+#%{_iconsdir}/hicolor/*/apps/*.png
 
 %files -n %{libname}
 %defattr(-,root,root)
@@ -285,14 +287,14 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_libdir}/lib*.a
 
-%files -n %{name}-examples
-%defattr(-,root,root)
-%dir %{_docdir}/Irrlicht-examples
-%{_docdir}/Irrlicht-examples/*
-%exclude %{_bindir}/irrlicht-GUIEditor
-%exclude %{_bindir}/irrlicht-FontTool
-%exclude %{_bindir}/irrlicht-Meshviewer
-%{_bindir}/irrlicht-*
+#%files -n %{name}-examples
+#%defattr(-,root,root)
+#%dir %{_docdir}/Irrlicht-examples
+#%{_docdir}/Irrlicht-examples/*
+#%exclude %{_bindir}/irrlicht-GUIEditor
+#%exclude %{_bindir}/irrlicht-FontTool
+#%exclude %{_bindir}/irrlicht-Meshviewer
+#%{_bindir}/irrlicht-*
 
 %files -n %{name}-media
 %defattr(-,root,root)
