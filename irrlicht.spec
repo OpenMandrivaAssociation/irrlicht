@@ -142,9 +142,9 @@ mkdir -p %{buildroot}%{_libdir}
 install -m 644 lib/Linux/libIrrlicht.a %{buildroot}%{_libdir}
 install -m 755  lib/Linux/libIrrlicht.so.%{major}* %{buildroot}%{_libdir}
 
-pushd %{buildroot}%{_libdir}
-ln -s libIrrlicht.so.1.3.0 libIrrlicht.so
-popd
+#pushd %{buildroot}%{_libdir}
+#ln -s libIrrlicht.so.1.3.0 libIrrlicht.so
+#popd
 
 # includes
 mkdir -p %{buildroot}%{_includedir}/irrlicht
@@ -168,7 +168,7 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 #install -dm 755 %{buildroot}%{_docdir}/Irrlicht-examples
 #install -m 644 * %{buildroot}%{_docdir}/Irrlicht-examples
 
-#ex_dir=`find . -name tutorial.html`
+# ex_dir=`find . -name tutorial.html`
 #for i in $ex_dir; do
 #	dir_name=`dirname $i`
 #	install -dm 755 %{buildroot}%{_docdir}/Irrlicht-examples/$dir_name
@@ -236,13 +236,13 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 #Categories=Graphics;3Dgraphics;GTK;
 #EOF
 
-#%post
-#%{update_menus}
-#%update_icon_cache hicolor
+#post
+#{update_menus}
+#update_icon_cache hicolor
 
-#%postun
-#%{clean_menus}
-#%clean_icon_cache hicolor
+#postun
+#{clean_menus}
+#clean_icon_cache hicolor
 
 %post -n %{libname} -p /sbin/ldconfig
 
@@ -251,7 +251,7 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 %clean
 rm -rf %{buildroot}
 
-#%files
+#files
 #%defattr(-,root,root)
 #%doc examples/09.Meshviewer/tutorial.html
 #%{_bindir}/irrlicht-GUIEditor
@@ -276,7 +276,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_libdir}/lib*.a
 
-#%files -n %{name}-examples
+#files -n %{name}-examples
 #%defattr(-,root,root)
 #%dir %{_docdir}/Irrlicht-examples
 #%{_docdir}/Irrlicht-examples/*
@@ -285,12 +285,12 @@ rm -rf %{buildroot}
 #%exclude %{_bindir}/irrlicht-Meshviewer
 #%{_bindir}/irrlicht-*
 
-#%files -n %{name}-media
+#files -n %{name}-media
 #%defattr(-,root,root)
 #%dir %{_datadir}/irrlicht
 #%{_datadir}/irrlicht/*
 
-#%files -n %{name}-doc
+#files -n %{name}-doc
 #%defattr(-,root,root)
 #%doc doc/irrlicht.chm
 #%doc doc/*.txt
