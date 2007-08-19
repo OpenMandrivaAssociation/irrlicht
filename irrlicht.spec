@@ -48,6 +48,7 @@ Summary:	Development files for Irrlicht 3D engine
 Group:		Development/C
 Requires:	%{libname} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
+Provides:	lib%{name}-devel = %{version}-%{release}
 
 %description -n %{develname}
 Development files for Irrlicht 3D engine.
