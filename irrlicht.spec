@@ -200,7 +200,6 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 #mkdir -p %{buildroot}%{_datadir}/applications
 #cat > %{buildroot}%{_datadir}/applications/irrlicht-GUIEditor.desktop << EOF
 #[Desktop Entry]
-#Encoding=UTF-8
 #Name=Irrlicht GUI Editor
 #Comment=Irrlicht GUI Editor
 #Exec=%{_bindir}/irrlicht-GUIEditor
@@ -213,7 +212,6 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 
 #cat > %{buildroot}%{_datadir}/applications/irrlicht-FontTool.desktop << EOF
 #[Desktop Entry]
-#Encoding=UTF-8
 #Name=Irrlicht Font Tool
 #Comment=Irrlicht Font Tool
 #Exec=%{_bindir}/irrlicht-FontTool
@@ -226,7 +224,6 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 
 #cat > %{buildroot}%{_datadir}/applications/irrlicht-Meshviewer.desktop << EOF
 #[Desktop Entry]
-#Encoding=UTF-8
 #Name=Irrlicht Mesh Viewer
 #Comment=Irrlicht Mesh Viewer
 #Exec=%{_bindir}/irrlicht-Meshviewer
