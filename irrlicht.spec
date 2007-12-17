@@ -20,7 +20,6 @@ BuildRequires:		libjpeg-devel
 BuildRequires:		libpng-devel
 BuildRequires:		mesa-common-devel
 #Requires:		%{libname} = %{version}-%{release}
-BuildRoot:		%{_tmppath}/%{name}-%{version}-buildroot
 
 %description
 The Irrlicht Engine is an open source high performance realtime
