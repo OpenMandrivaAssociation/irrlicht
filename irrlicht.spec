@@ -1,4 +1,5 @@
 %define major 1
+%define minor 4
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -d -s
@@ -11,9 +12,10 @@ License:		Zlib/libpng
 Group:			Graphics
 URL:			http://irrlicht.sourceforge.net/
 Source:			http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch0:			%{name}-1.3.1-dimension.patch
-Patch1:			%{name}-1.3.1-library-makefile.patch
+Patch1:			%{name}-1.4-library-makefile.patch
 Patch2:			%{name}-1.3.1-use-system-libs.patch
+Patch3:			%{name}-1.4-GUIEditor-makefile.patch
+Patch4:			%{name}-1.4-IrrFontTool-makefile.patch
 BuildRequires:		imagemagick
 BuildRequires:		zlib-devel
 BuildRequires:		libjpeg-devel
@@ -84,14 +86,17 @@ Static files for Irrlicht 3D engine.
 
 %prep
 %setup -q
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
-export CFLAGS="%{optflags} -fPIC"
-export CXXFLAGS="%{optflags} -fPIC"
+export CFLAGS="%{optflags}"
+export CXXFLAGS="%{optflags}"
 export LIBDIR="%{_libdir}"
+export PREFIX="%{_prefix}"
+export INCLUDEDIR="%{_includedir}"
 
 # really not needed :)
 rm -r examples/14.Win32Window
@@ -106,29 +111,29 @@ find ./examples -name *.cpp | xargs sed -i -e 's|../../media/|%{_datadir}/irrlic
 
 # create shared-lib first
 pushd source/Irrlicht
-%make sharedlib
+%make sharedlib NDEBUG=1
 popd
 
 # create necessary links to avoid linker-error for tools/examples
-#pushd lib/Linux
-#ln -s libIrrlicht.so.1.3.0 libIrrlicht.so.1
-#ln -s libIrrlicht.so.1.3.0 libIrrlicht.so
-#popd
+pushd lib/Linux
+ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so.1
+ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
+popd
 
 # tools
-#pushd tools
-#cd GUIEditor
-#%make
-#cd ..
-#cd IrrFontTool/newFontTool
-#%make
-#cd ../..
-#popd
+pushd tools
+cd GUIEditor
+%make
+cd ..
+cd IrrFontTool/newFontTool
+%make
+cd ../..
+popd
 
 # examples
-#pushd examples
-#sh buildAllExamples.sh
-#popd
+pushd examples
+sh buildAllExamples.sh
+popd
 
 # build static lib
 pushd source/Irrlicht
@@ -140,10 +145,10 @@ popd
 mkdir -p %{buildroot}%{_libdir}
 
 install -m 644 lib/Linux/libIrrlicht.a %{buildroot}%{_libdir}
-install -m 755  lib/Linux/libIrrlicht.so.%{major}* %{buildroot}%{_libdir}
+install -m 755  lib/Linux/libIrrlicht.so.%{major}.%{minor}* %{buildroot}%{_libdir}
 
 pushd %{buildroot}%{_libdir}
-ln -s libIrrlicht.so.1.3.0 libIrrlicht.so
+ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
 popd
 
 # includes
@@ -202,11 +207,11 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 #Name=Irrlicht GUI Editor
 #Comment=Irrlicht GUI Editor
 #Exec=%{_bindir}/irrlicht-GUIEditor
-#Icon=%{name}.png
+#Icon=%{name}
 #Terminal=false
 #Type=Application
 #StartupNotify=true
-#Categories=Graphics;3DGraphics;GTK;
+#Categories=3DGraphics;GTK;
 #EOF
 
 #cat > %{buildroot}%{_datadir}/applications/irrlicht-FontTool.desktop << EOF
@@ -214,11 +219,11 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 #Name=Irrlicht Font Tool
 #Comment=Irrlicht Font Tool
 #Exec=%{_bindir}/irrlicht-FontTool
-#Icon=%{name}.png
+#Icon=%{name}
 #Terminal=false
 #Type=Application
 #StartupNotify=true
-#Categories=Graphics;3dGraphics;GTK;
+#Categories=3DGraphics;GTK;
 #EOF
 
 #cat > %{buildroot}%{_datadir}/applications/irrlicht-Meshviewer.desktop << EOF
@@ -226,11 +231,11 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 #Name=Irrlicht Mesh Viewer
 #Comment=Irrlicht Mesh Viewer
 #Exec=%{_bindir}/irrlicht-Meshviewer
-#Icon=irrlicht-Meshviewer.png
+#Icon=irrlicht-Meshviewer
 #Terminal=true
 #Type=Application
 #StartupNotify=true
-#Categories=Graphics;3Dgraphics;GTK;
+#Categories=3DGraphics;GTK;
 #EOF
 
 #post
@@ -261,7 +266,7 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
-%{_libdir}/lib*.so.%{major}*
+%{_libdir}/lib*.so.%{major}.%{minor}*
 
 %files -n %{develname}
 %defattr(-,root,root)
