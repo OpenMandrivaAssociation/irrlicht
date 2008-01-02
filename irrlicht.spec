@@ -17,12 +17,14 @@ Patch2:			%{name}-1.4-use-system-libs.patch
 Patch3:			%{name}-1.4-GUIEditor-makefile.patch
 Patch4:			%{name}-1.4-IrrFontTool-makefile.patch
 Patch5:			%{name}-1.4-glXGetProcAddress.patch
+Patch6:			%{name}-1.4-examples-makefile.patch
 BuildRequires:		imagemagick
 BuildRequires:		zlib-devel
 BuildRequires:		libjpeg-devel
 BuildRequires:		libpng-devel
 BuildRequires:		mesa-common-devel
 Requires:		%{libname} = %{version}-%{release}
+Requires:		%{name}-media = %{version}-%{release}
 
 %description
 The Irrlicht Engine is an open source high performance realtime
@@ -72,12 +74,12 @@ Requires:	%{libname} = %{version}-%{release}
 Demos and examples for the Irrlicht 3D engine.
 
 %package media
-Summary:	Some media files for Irrlicht 3D engine
+Summary:	Media files for Irrlicht 3D engine
 Group:		Graphics
-Requires:	%{libname} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description media
-Some media files for Irrlicht tools and demos.
+Media files needed by Irrlicht tools and demos.
 
 %package doc
 Summary:	User documentation for the Irrlicht 3D engine
@@ -94,6 +96,7 @@ User documentation for the Irrlicht 3D engine.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
 export LIBDIR="%{_libdir}"
@@ -147,6 +150,8 @@ popd
 
 # build examples
 pushd examples
+export CFLAGS="%{optflags}"
+export CXXFLAGS="%{optflags}"
 sh buildAllExamples.sh
 popd
 
