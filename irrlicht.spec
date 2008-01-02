@@ -117,10 +117,9 @@ find ./examples -name *.cpp | xargs sed -i -e 's|../../media/|%{_datadir}/irrlic
 # clean it    
 %make -C source/Irrlicht clean
 
-# build sharedlibrary
+# build shared library
 %make -C source/Irrlicht sharedlib NDEBUG=1 \
     %ifnarch ix86
-# x86_64 need -fPIC
     CFLAGS="%{optflags} -fPIC" \
     CXXFLAGS="%{optflags} -fPIC"
     %else
