@@ -74,6 +74,7 @@ Demos and examples for the Irrlicht 3D engine.
 %package media
 Summary:	Some media files for Irrlicht 3D engine
 Group:		Graphics
+Requires:	%{libname} = %{version}-%{release}
 
 %description media
 Some media files for Irrlicht tools and demos.
@@ -81,6 +82,7 @@ Some media files for Irrlicht tools and demos.
 %package doc
 Summary:	User documentation for the Irrlicht 3D engine
 Group:		Graphics
+Requires:	%{libname} = %{version}-%{release}
 
 %description doc
 User documentation for the Irrlicht 3D engine.
