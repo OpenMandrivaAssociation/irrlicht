@@ -117,8 +117,7 @@ find ./examples -name *.cpp | xargs sed -i -e 's|../../media/|%{_datadir}/irrlic
 # build static library
 %make -C source/Irrlicht \
     CFLAGS="%{optflags}" \
-    CXXFLAGS="%{optflags}" \
-    CPPFLAGS="%{optflags}"
+    CXXFLAGS="%{optflags}"
 
 # clean it    
 %make -C source/Irrlicht clean
@@ -127,12 +126,10 @@ find ./examples -name *.cpp | xargs sed -i -e 's|../../media/|%{_datadir}/irrlic
 %make -C source/Irrlicht sharedlib NDEBUG=1 \
     %ifnarch ix86
     CFLAGS="%{optflags} -fPIC" \
-    CXXFLAGS="%{optflags} -fPIC" \
-    CPPFLAGS="%{optflags} -fPIC"
+    CXXFLAGS="%{optflags} -fPIC"
     %else
     CFLAGS="%{optflags}" \
-    CXXFLAGS="%{optflags}" \
-    CPPFLAGS="%{optflags}"
+    CXXFLAGS="%{optflags}"
     %endif
 
 # create necessary links to avoid linker-error for tools/examples
