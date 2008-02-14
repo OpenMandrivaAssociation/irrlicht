@@ -10,6 +10,7 @@ Version:		1.4
 Release:		%mkrel 2
 License:		zlib
 Group:			Graphics
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL:			http://irrlicht.sourceforge.net/
 Source:			http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
 Patch1:			%{name}-1.4-library-makefile.patch
