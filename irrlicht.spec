@@ -7,10 +7,9 @@
 Summary:		The Irrlicht Engine SDK
 Name:			irrlicht
 Version:		1.4
-Release:		%mkrel 2
-License:		zlib
+Release:		%mkrel 3
+License:		Zlib
 Group:			Graphics
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL:			http://irrlicht.sourceforge.net/
 Source:			http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
 Patch1:			%{name}-1.4-library-makefile.patch
@@ -26,6 +25,7 @@ BuildRequires:		libpng-devel
 BuildRequires:		mesa-common-devel
 Requires:		%{libname} = %{version}-%{release}
 Requires:		%{name}-media = %{version}-%{release}
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 The Irrlicht Engine is an open source high performance realtime
