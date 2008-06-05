@@ -17,7 +17,7 @@ Patch2:			%{name}-1.4-use-system-libs.patch
 Patch3:			%{name}-1.4-GUIEditor-makefile.patch
 Patch4:			%{name}-1.4-IrrFontTool-makefile.patch
 Patch5:			%{name}-1.4-glXGetProcAddress.patch
-Patch6:			%{name}-1.4-examples-makefile.patch
+Patch6:			%{name}-1.4.1-examples-makefile.patch
 BuildRequires:		imagemagick
 BuildRequires:		zlib-devel
 BuildRequires:		libjpeg-devel
