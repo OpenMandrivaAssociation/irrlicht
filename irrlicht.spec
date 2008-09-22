@@ -6,13 +6,13 @@
 
 Summary:		The Irrlicht Engine SDK
 Name:			irrlicht
-Version:		1.4.1
-Release:		%mkrel 2
+Version:		1.4.2
+Release:		%mkrel 1
 License:		Zlib
 Group:			Graphics
 URL:			http://irrlicht.sourceforge.net/
 Source:			http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch1:			%{name}-1.4-library-makefile.patch
+Patch1:			%{name}-1.4.2-library-makefile.patch
 Patch2:			%{name}-1.4-use-system-libs.patch
 Patch3:			%{name}-1.4-GUIEditor-makefile.patch
 Patch4:			%{name}-1.4-IrrFontTool-makefile.patch
