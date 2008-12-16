@@ -1,31 +1,32 @@
 %define major 1
-%define minor 4
+%define minor 5
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -d -s
 
-Summary:		The Irrlicht Engine SDK
-Name:			irrlicht
-Version:		1.5
-Release:		%mkrel 1
-License:		Zlib
-Group:			Graphics
-URL:			http://irrlicht.sourceforge.net/
-Source:			http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch1:			%{name}-1.4.2-library-makefile.patch
-Patch2:			%{name}-1.4-use-system-libs.patch
-Patch3:			%{name}-1.4-GUIEditor-makefile.patch
-Patch4:			%{name}-1.4-IrrFontTool-makefile.patch
-Patch5:			%{name}-1.4-glXGetProcAddress.patch
-Patch6:			%{name}-1.4.1-examples-makefile.patch
-BuildRequires:		imagemagick
-BuildRequires:		zlib-devel
-BuildRequires:		libjpeg-devel
-BuildRequires:		libpng-devel
-BuildRequires:		mesa-common-devel
-Requires:		%{libname} = %{version}-%{release}
-Requires:		%{name}-media = %{version}-%{release}
-BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Summary:	The Irrlicht Engine SDK
+Name:		irrlicht
+Version:	1.5
+Release:	%mkrel 1
+License:	Zlib
+Group:		Graphics
+URL:		http://irrlicht.sourceforge.net/
+Source:		http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
+Patch1:		%{name}-1.5-library-makefile.patch
+Patch2:		%{name}-1.4-use-system-libs.patch
+Patch3:		%{name}-1.4-GUIEditor-makefile.patch
+Patch4:		%{name}-1.5-IrrFontTool-makefile.patch
+Patch5:		%{name}-1.4-glXGetProcAddress.patch
+Patch6:		%{name}-1.4.1-examples-makefile.patch
+BuildRequires:	imagemagick
+BuildRequires:	zlib-devel
+BuildRequires:	libjpeg-devel
+BuildRequires:	libpng-devel
+BuildRequires:	mesa-common-devel
+BuildRequires:	libxft-devel
+Requires:	%{libname} = %{version}-%{release}
+Requires:	%{name}-media = %{version}-%{release}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 The Irrlicht Engine is an open source high performance realtime
