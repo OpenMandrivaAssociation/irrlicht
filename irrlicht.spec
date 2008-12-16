@@ -6,7 +6,7 @@
 
 Summary:		The Irrlicht Engine SDK
 Name:			irrlicht
-Version:		1.4.2
+Version:		1.5
 Release:		%mkrel 1
 License:		Zlib
 Group:			Graphics
