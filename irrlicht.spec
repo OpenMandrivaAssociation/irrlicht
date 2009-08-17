@@ -6,7 +6,7 @@
 
 Summary:	The Irrlicht Engine SDK
 Name:		irrlicht
-Version:	1.5
+Version:	1.5.1
 Release:	%mkrel 1
 License:	Zlib
 Group:		Graphics
@@ -14,7 +14,7 @@ URL:		http://irrlicht.sourceforge.net/
 Source:		http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
 Patch1:		%{name}-1.5-library-makefile.patch
 Patch2:		%{name}-1.4-use-system-libs.patch
-Patch3:		%{name}-1.4-GUIEditor-makefile.patch
+Patch3:		%{name}-1.5.1-GUIEditor-makefile.patch
 Patch4:		%{name}-1.5-IrrFontTool-makefile.patch
 Patch5:		%{name}-1.4-glXGetProcAddress.patch
 Patch6:		%{name}-1.4.1-examples-makefile.patch
@@ -99,7 +99,6 @@ User documentation for the Irrlicht 3D engine.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-
 %build
 export LIBDIR="%{_libdir}"
 export PREFIX="%{_prefix}"
@@ -136,8 +135,8 @@ find ./examples -name *.cpp | xargs sed -i -e 's|../../media/|%{_datadir}/irrlic
 
 # create necessary links to avoid linker-error for tools/examples
 pushd lib/Linux
-ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so.1
 ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
+ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so.%{major}
 popd
 
 # build tools
@@ -173,7 +172,7 @@ cp -f include/*.h %{buildroot}%{_includedir}/irrlicht
 
 # tools
 install -dm 755 %{buildroot}%{_bindir}
-install -m 755 tools/GUIEditor/GUIEditor %{buildroot}%{_bindir}/irrlicht-GUIEditor
+install -m 755 bin/Linux/GUIEditor %{buildroot}%{_bindir}/irrlicht-GUIEditor
 install -m 755 bin/Linux/FontTool %{buildroot}%{_bindir}/irrlicht-FontTool
 
 # examples
