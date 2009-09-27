@@ -1,23 +1,26 @@
+# (tpg) SET VERSION HERE !!!
 %define major 1
-%define minor 5
+%define minor 5.1
+
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -d -s
 
 Summary:	The Irrlicht Engine SDK
 Name:		irrlicht
-Version:	1.5.1
+Version:	%{major}.%{minor}
 Release:	%mkrel 1
 License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
 Source:		http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch1:		%{name}-1.5-library-makefile.patch
+Patch1:		%{name}-1.5.1-library-makefile.patch
 Patch2:		%{name}-1.4-use-system-libs.patch
 Patch3:		%{name}-1.5.1-GUIEditor-makefile.patch
 Patch4:		%{name}-1.5-IrrFontTool-makefile.patch
 Patch5:		%{name}-1.4-glXGetProcAddress.patch
 Patch6:		%{name}-1.4.1-examples-makefile.patch
+Patch7:		irrlicht-1.5.1-glext.patch
 BuildRequires:	imagemagick
 BuildRequires:	zlib-devel
 BuildRequires:	libjpeg-devel
@@ -99,6 +102,8 @@ User documentation for the Irrlicht 3D engine.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
+
 %build
 export LIBDIR="%{_libdir}"
 export PREFIX="%{_prefix}"
@@ -106,6 +111,8 @@ export INCLUDEDIR="%{_includedir}"
 
 # really not needed :)
 rm -r examples/14.Win32Window
+# (tpg) use system wide libs, see patch2
+rm -rf source/Irrlicht/jpeglib source/Irrlicht/zlib source/Irrlicht/libpng
 
 # needs irrKlang
 rm -r examples/Demo
@@ -115,12 +122,19 @@ sed -i -e 's|Demo||g' examples/buildAllExamples.sh
 sed -i -e 's|../../media/|%{_datadir}/irrlicht/|g' tools/GUIEditor/main.cpp
 find ./examples -name *.cpp | xargs sed -i -e 's|../../media/|%{_datadir}/irrlicht/|g'
 
+# (tpg) clean this mess
+for i in include/*.h doc/upgrade-guide.txt source/Irrlicht/*.cpp source/Irrlicht/*.h; do
+    sed -i 's/\r//' $i
+    chmod -x $i
+    touch -r changes.txt $i
+done
+
 # build static library
 %make -C source/Irrlicht \
     CFLAGS="%{optflags}" \
     CXXFLAGS="%{optflags}"
 
-# clean it    
+# clean it
 %make -C source/Irrlicht clean
 
 # build shared library
