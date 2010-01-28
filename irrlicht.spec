@@ -1,6 +1,6 @@
 # (tpg) SET VERSION HERE !!!
 %define major 1
-%define minor 5.1
+%define minor 6
 
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -9,17 +9,17 @@
 Summary:	The Irrlicht Engine SDK
 Name:		irrlicht
 Version:	%{major}.%{minor}
-Release:	%mkrel 2
+Release:	%mkrel 1
 License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
 Source:		http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch1:		%{name}-1.5.1-library-makefile.patch
+Patch1:		%{name}-1.6-library-makefile.patch
 Patch2:		%{name}-1.4-use-system-libs.patch
-Patch3:		%{name}-1.5.1-GUIEditor-makefile.patch
-Patch4:		%{name}-1.5-IrrFontTool-makefile.patch
+Patch3:		%{name}-1.6-GUIEditor-makefile.patch
+Patch4:		%{name}-1.6-IrrFontTool-makefile.patch
 Patch5:		%{name}-1.4-glXGetProcAddress.patch
-Patch6:		%{name}-1.4.1-examples-makefile.patch
+Patch6:		%{name}-1.6-examples-makefile.patch
 Patch7:		irrlicht-1.5.1-glext.patch
 BuildRequires:	imagemagick
 BuildRequires:	zlib-devel
@@ -100,7 +100,7 @@ User documentation for the Irrlicht 3D engine.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+#%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 
@@ -111,8 +111,11 @@ export INCLUDEDIR="%{_includedir}"
 
 # really not needed :)
 rm -r examples/14.Win32Window
+rm -r source/Irrlicht/MacOSX
 # (tpg) use system wide libs, see patch2
 rm -rf source/Irrlicht/jpeglib source/Irrlicht/zlib source/Irrlicht/libpng
+find source/Irrlicht -name '*.cpp' | xargs sed -i -e 's|zlib/zlib.h|zlib.h|g' -e 's|libpng/png.h|png.h|g' -e 's|jpeglib/jerror.h|jerror.h|g' -e 's|jpeglib/jpeglib.h|jpeglib.h|g'
+find source/Irrlicht -name '*.h'   | xargs sed -i -e 's|jpeglib/jpeglib.h|jpeglib.h|g' -e 's|libpng/png.h|png.h|g' -e 's|jpeglib/jerror.h|jerror.h|g'
 
 # needs irrKlang
 rm -r examples/Demo
@@ -132,7 +135,8 @@ done
 # build static library
 %make -C source/Irrlicht \
     CFLAGS="%{optflags}" \
-    CXXFLAGS="%{optflags}"
+    CXXFLAGS="%{optflags}" \
+    LDFLAGS="%{ldflags}"
 
 # clean it
 %make -C source/Irrlicht clean
@@ -141,10 +145,12 @@ done
 %make -C source/Irrlicht sharedlib NDEBUG=1 \
     %ifnarch ix86
     CFLAGS="%{optflags} -fPIC" \
-    CXXFLAGS="%{optflags} -fPIC"
+    CXXFLAGS="%{optflags} -fPIC" \
+    LDFLAGS="%{ldflags}"
     %else
     CFLAGS="%{optflags}" \
-    CXXFLAGS="%{optflags}"
+    CXXFLAGS="%{optflags}" \
+    LDFLAGS="%{ldflags}"
     %endif
 
 # create necessary links to avoid linker-error for tools/examples
@@ -156,10 +162,10 @@ popd
 # build tools
 pushd tools
 cd GUIEditor
-%make CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
+%make CFLAGS="%{optflags}" CXXFLAGS="%{optflags} -ffast-math" LDFLAGS="%{ldflags}"
 cd ..
 cd IrrFontTool/newFontTool
-%make CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
+%make CFLAGS="%{optflags}" CXXFLAGS="%{optflags}" LDFLAGS="%{ldflags}"
 cd ../..
 popd
 
@@ -167,6 +173,7 @@ popd
 pushd examples
 export CFLAGS="%{optflags}"
 export CXXFLAGS="%{optflags}"
+export LDFLAGS="%{ldflags}"
 sh buildAllExamples.sh
 popd
 
@@ -176,9 +183,9 @@ mkdir -p %{buildroot}%{_libdir}
 install -m 644 lib/Linux/libIrrlicht.a %{buildroot}%{_libdir}
 install -m 755  lib/Linux/libIrrlicht.so.%{major}.%{minor}* %{buildroot}%{_libdir}
 
-pushd %{buildroot}%{_libdir}
-ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
-popd
+#pushd %{buildroot}%{_libdir}
+#ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
+#popd
 
 # includes
 mkdir -p %{buildroot}%{_includedir}/irrlicht
@@ -200,7 +207,6 @@ done
 # examples-docs
 pushd examples
 install -dm 755 %{buildroot}%{_docdir}/Irrlicht-examples
-#install -m 644 * %{buildroot}%{_docdir}/Irrlicht-examples
 
 ex_dir=`find . -name tutorial.html`
 for i in $ex_dir; do
