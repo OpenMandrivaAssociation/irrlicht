@@ -183,9 +183,9 @@ mkdir -p %{buildroot}%{_libdir}
 install -m 644 lib/Linux/libIrrlicht.a %{buildroot}%{_libdir}
 install -m 755  lib/Linux/libIrrlicht.so.%{major}.%{minor}* %{buildroot}%{_libdir}
 
-#pushd %{buildroot}%{_libdir}
-#ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
-#popd
+pushd %{buildroot}%{_libdir}
+ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
+popd
 
 # includes
 mkdir -p %{buildroot}%{_includedir}/irrlicht
