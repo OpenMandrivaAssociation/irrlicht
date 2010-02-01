@@ -1,6 +1,6 @@
 # (tpg) SET VERSION HERE !!!
 %define major 1
-%define minor 6
+%define minor 6.1
 
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -14,7 +14,7 @@ License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
 Source:		http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch1:		%{name}-1.6-library-makefile.patch
+Patch1:		%{name}-1.6.1-library-makefile.patch
 Patch2:		%{name}-1.4-use-system-libs.patch
 Patch3:		%{name}-1.6-GUIEditor-makefile.patch
 Patch4:		%{name}-1.6-IrrFontTool-makefile.patch
@@ -332,5 +332,5 @@ rm -rf %{buildroot}
 
 %files doc
 %defattr(-,root,root)
-%doc doc/irrlicht.chm
-%doc doc/*.txt
+#%doc doc/irrlicht.chm
+%doc doc/*
