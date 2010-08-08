@@ -1,6 +1,6 @@
 # (tpg) SET VERSION HERE !!!
 %define major 1
-%define minor 6.1
+%define minor 7.1
 
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -14,10 +14,10 @@ License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
 Source:		http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch1:		%{name}-1.6.1-library-makefile.patch
-Patch2:		%{name}-1.4-use-system-libs.patch
-Patch3:		%{name}-1.6-GUIEditor-makefile.patch
-Patch4:		%{name}-1.6-IrrFontTool-makefile.patch
+Patch1:		%{name}-1.7.1-library-makefile.patch
+Patch2:		%{name}-1.7.1-use-system-libs.patch
+Patch3:		%{name}-1.7.1-GUIEditor-makefile.patch
+Patch4:		%{name}-1.7.1-IrrFontTool-makefile.patch
 Patch5:		%{name}-1.4-glXGetProcAddress.patch
 Patch6:		%{name}-1.6-examples-makefile.patch
 Patch7:		irrlicht-1.5.1-glext.patch
@@ -27,6 +27,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	mesa-common-devel
 BuildRequires:	libxft-devel
+BuildRequires:	libbzip2-devel
 Requires:	%{libname} = %{version}-%{release}
 Requires:	%{name}-media = %{version}-%{release}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -105,6 +106,7 @@ User documentation for the Irrlicht 3D engine.
 %patch7 -p1
 
 %build
+%setup_compile_flags
 export LIBDIR="%{_libdir}"
 export PREFIX="%{_prefix}"
 export INCLUDEDIR="%{_includedir}"
@@ -113,7 +115,8 @@ export INCLUDEDIR="%{_includedir}"
 rm -r examples/14.Win32Window
 rm -r source/Irrlicht/MacOSX
 # (tpg) use system wide libs, see patch2
-rm -rf source/Irrlicht/jpeglib source/Irrlicht/zlib source/Irrlicht/libpng
+rm -rf source/Irrlicht/jpeglib source/Irrlicht/zlib source/Irrlicht/libpng source/Irrlicht/bzip2 
+#source/Irrlicht/lzma source/Irrlicht/aesGladman
 find source/Irrlicht -name '*.cpp' | xargs sed -i -e 's|zlib/zlib.h|zlib.h|g' -e 's|libpng/png.h|png.h|g' -e 's|jpeglib/jerror.h|jerror.h|g' -e 's|jpeglib/jpeglib.h|jpeglib.h|g'
 find source/Irrlicht -name '*.h'   | xargs sed -i -e 's|jpeglib/jpeglib.h|jpeglib.h|g' -e 's|libpng/png.h|png.h|g' -e 's|jpeglib/jerror.h|jerror.h|g'
 
@@ -126,11 +129,14 @@ sed -i -e 's|../../media/|%{_datadir}/irrlicht/|g' tools/GUIEditor/main.cpp
 find ./examples -name *.cpp | xargs sed -i -e 's|../../media/|%{_datadir}/irrlicht/|g'
 
 # (tpg) clean this mess
-for i in include/*.h doc/upgrade-guide.txt source/Irrlicht/*.cpp source/Irrlicht/*.h; do
+for i in include/*.h doc/upgrade-guide.txt source/Irrlicht/*.cpp source/Irrlicht/*.h source/Irrlicht/Makefile; do
     sed -i 's/\r//' $i
     chmod -x $i
     touch -r changes.txt $i
 done
+
+#(tpg) correct version
+sed -i -e 's/0-SVN/1/g' source/Irrlicht/Makefile
 
 # build static library
 %make -C source/Irrlicht \
@@ -224,13 +230,13 @@ install -m 755 media/* %{buildroot}%{_datadir}/irrlicht
 # icons
 install -dm 755 %{buildroot}%{_iconsdir}/hicolor/{16x16,32x32,48x48}/apps
 convert examples/09.Meshviewer/icon.ico -resize 48x48 %{buildroot}%{_iconsdir}/hicolor/48x48/apps/irrlicht-Meshviewer.png
-convert bin/Win32-gcc/irrlicht.ico -resize 48x48 %{buildroot}%{_iconsdir}/hicolor/48x48/apps/irrlicht.png
+convert bin/Win32-VisualStudio/irrlicht.ico -resize 48x48 %{buildroot}%{_iconsdir}/hicolor/48x48/apps/irrlicht.png
 
 convert examples/09.Meshviewer/icon.ico -resize 32x32 %{buildroot}%{_iconsdir}/hicolor/32x32/apps/irrlicht-Meshviewer.png
-convert bin/Win32-gcc/irrlicht.ico -resize 32x32 %{buildroot}%{_iconsdir}/hicolor/32x32/apps/irrlicht.png
+convert bin/Win32-VisualStudio/irrlicht.ico -resize 32x32 %{buildroot}%{_iconsdir}/hicolor/32x32/apps/irrlicht.png
 
 convert examples/09.Meshviewer/icon.ico -resize 16x16 %{buildroot}%{_iconsdir}/hicolor/16x16/apps/irrlicht-Meshviewer.png
-convert bin/Win32-gcc/irrlicht.ico -resize 16x16 %{buildroot}%{_iconsdir}/hicolor/16x16/apps/irrlicht.png
+convert bin/Win32-VisualStudio/irrlicht.ico -resize 16x16 %{buildroot}%{_iconsdir}/hicolor/16x16/apps/irrlicht.png
 
 # menu
 mkdir -p %{buildroot}%{_datadir}/applications
