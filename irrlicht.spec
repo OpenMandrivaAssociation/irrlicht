@@ -1,6 +1,6 @@
 # (tpg) SET VERSION HERE !!!
 %define major 1
-%define minor 7.1
+%define minor 7.2
 
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
