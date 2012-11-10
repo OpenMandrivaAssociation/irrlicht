@@ -1,0 +1,32 @@
+diff -Naur irrlicht-1.7.1//tools/GUIEditor/Makefile irrlicht-1.7.1.tpg//tools/GUIEditor/Makefile
+--- irrlicht-1.7.1//tools/GUIEditor/Makefile	2010-01-31 15:03:34.000000000 +0000
++++ irrlicht-1.7.1.tpg//tools/GUIEditor/Makefile	2010-08-08 12:55:16.000000000 +0000
+@@ -2,8 +2,8 @@
+ Target = GUIEditor
+ Sources = CGUIAttributeEditor.cpp CGUIEditFactory.cpp CGUIEditWindow.cpp CGUIEditWorkspace.cpp CGUIPanel.cpp CGUITextureCacheBrowser.cpp CMemoryReadWriteFile.cpp main.cpp
+ 
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
+-CXXFLAGS = -Wall -O3 -ffast-math
++CPPFLAGS += -I../../include -I$(INCLUDEDIR)
++CXXFLAGS += -Wall -O3 -ffast-math
+ 
+ ifeq ($(HOSTTYPE), x86_64)
+ LIBSELECT=64
+@@ -13,7 +13,7 @@
+ 
+ # target specific settings
+ all_linux: SYSTEM=Linux
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/$(SYSTEM) -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/$(SYSTEM) -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -lbz2
+ 
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+ all_win32: LDFLAGS = -L../../lib/$(SYSTEM) -lIrrlicht -lopengl32 -lm
+@@ -31,7 +31,7 @@
+ 
+ all_linux all_win32: $(OBJ)
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -L../../lib/$(SYSTEM) -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -lbz2 -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)

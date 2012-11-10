@@ -1,0 +1,32 @@
+diff -Naur irrlicht-1.7.1//tools/IrrFontTool/newFontTool/Makefile irrlicht-1.7.1.tpg//tools/IrrFontTool/newFontTool/Makefile
+--- irrlicht-1.7.1//tools/IrrFontTool/newFontTool/Makefile	2010-01-31 15:03:30.000000000 +0000
++++ irrlicht-1.7.1.tpg//tools/IrrFontTool/newFontTool/Makefile	2010-08-08 13:08:25.000000000 +0000
+@@ -5,8 +5,8 @@
+ Sources = CFontTool.cpp main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../../include -I/usr/X11R6/include -I/usr/include/freetype2/
+-CXXFLAGS = -O3 -ffast-math
++CPPFLAGS += -I../../../include -I$(INCLUDEDIR) -I$(INCLUDEDIR)/freetype2/
++CXXFLAGS += -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+ #default target is Linux
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXft
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXft -ljpeg -lpng -lz -lbz2
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../../lib/Win32-gcc -lIrrlicht -lgdi32 -lopengl32 -lglu32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXft -ljpeg -lpng -lz -lbz2 -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)

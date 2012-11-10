@@ -1,0 +1,622 @@
+diff -Naur irrlicht-1.6/examples/01.HelloWorld/Makefile irrlicht-1.6.tpg/examples/01.HelloWorld/Makefile
+--- irrlicht-1.6/examples/01.HelloWorld/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/01.HelloWorld/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -24,7 +24,7 @@
+ #no changes necessary below this line
+ ####
+ 
+-CPPFLAGS = -I$(IrrlichtHome)/include -I/usr/X11R6/include $(USERCPPFLAGS)
++CPPFLAGS = -I$(IrrlichtHome)/include -I$(INCLUDEDIR) $(USERCPPFLAGS)
+ CXXFLAGS = $(USERCXXFLAGS)
+ LDFLAGS = $(USERLDFLAGS)
+ 
+@@ -33,7 +33,7 @@
+ 
+ # target specific settings
+ all_linux all_win32 static_win32: LDFLAGS += -L$(IrrlichtHome)/lib/$(SYSTEM) -lIrrlicht
+-all_linux: LDFLAGS += -L/usr/X11R6/lib$(LIBSELECT) -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS += -L$(LIBDIR) -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32 clean_win32 static_win32: SYSTEM=Win32-gcc
+ all_win32 clean_win32 static_win32: SUF=.exe
+@@ -45,7 +45,7 @@
+ 
+ all_linux all_win32 static_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/02.Quake3Map/Makefile irrlicht-1.6.tpg/examples/02.Quake3Map/Makefile
+--- irrlicht-1.6/examples/02.Quake3Map/Makefile	2009-09-19 14:58:42.000000000 +0000
++++ irrlicht-1.6.tpg/examples/02.Quake3Map/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht
+ static_win32: LDFLAGS += -lgdi32 -lopengl32 -ld3dx9d -lwinmm -lm
+@@ -29,7 +29,7 @@
+ 
+ all_linux all_win32 static_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/03.CustomSceneNode/Makefile irrlicht-1.6.tpg/examples/03.CustomSceneNode/Makefile
+--- irrlicht-1.6/examples/03.CustomSceneNode/Makefile	2009-09-19 14:58:38.000000000 +0000
++++ irrlicht-1.6.tpg/examples/03.CustomSceneNode/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/04.Movement/Makefile irrlicht-1.6.tpg/examples/04.Movement/Makefile
+--- irrlicht-1.6/examples/04.Movement/Makefile	2009-09-19 14:58:42.000000000 +0000
++++ irrlicht-1.6.tpg/examples/04.Movement/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32: CPPFLAGS += -D__GNUWIN32__ -D_WIN32 -DWIN32 -D_WINDOWS -D_MBCS -D_USRDLL
+@@ -28,7 +28,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/05.UserInterface/Makefile irrlicht-1.6.tpg/examples/05.UserInterface/Makefile
+--- irrlicht-1.6/examples/05.UserInterface/Makefile	2009-09-19 14:58:38.000000000 +0000
++++ irrlicht-1.6.tpg/examples/05.UserInterface/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/06.2DGraphics/Makefile irrlicht-1.6.tpg/examples/06.2DGraphics/Makefile
+--- irrlicht-1.6/examples/06.2DGraphics/Makefile	2009-09-19 14:58:42.000000000 +0000
++++ irrlicht-1.6.tpg/examples/06.2DGraphics/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/07.Collision/Makefile irrlicht-1.6.tpg/examples/07.Collision/Makefile
+--- irrlicht-1.6/examples/07.Collision/Makefile	2009-09-19 14:58:38.000000000 +0000
++++ irrlicht-1.6.tpg/examples/07.Collision/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/08.SpecialFX/Makefile irrlicht-1.6.tpg/examples/08.SpecialFX/Makefile
+--- irrlicht-1.6/examples/08.SpecialFX/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/08.SpecialFX/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/09.Meshviewer/Makefile irrlicht-1.6.tpg/examples/09.Meshviewer/Makefile
+--- irrlicht-1.6/examples/09.Meshviewer/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/09.Meshviewer/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/10.Shaders/Makefile irrlicht-1.6.tpg/examples/10.Shaders/Makefile
+--- irrlicht-1.6/examples/10.Shaders/Makefile	2009-09-19 14:58:42.000000000 +0000
++++ irrlicht-1.6.tpg/examples/10.Shaders/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/11.PerPixelLighting/Makefile irrlicht-1.6.tpg/examples/11.PerPixelLighting/Makefile
+--- irrlicht-1.6/examples/11.PerPixelLighting/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/11.PerPixelLighting/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/12.TerrainRendering/Makefile irrlicht-1.6.tpg/examples/12.TerrainRendering/Makefile
+--- irrlicht-1.6/examples/12.TerrainRendering/Makefile	2009-09-19 14:58:38.000000000 +0000
++++ irrlicht-1.6.tpg/examples/12.TerrainRendering/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/13.RenderToTexture/Makefile irrlicht-1.6.tpg/examples/13.RenderToTexture/Makefile
+--- irrlicht-1.6/examples/13.RenderToTexture/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/13.RenderToTexture/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/14.Win32Window/Makefile irrlicht-1.6.tpg/examples/14.Win32Window/Makefile
+--- irrlicht-1.6/examples/14.Win32Window/Makefile	2009-09-19 14:58:42.000000000 +0000
++++ irrlicht-1.6.tpg/examples/14.Win32Window/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/15.LoadIrrFile/Makefile irrlicht-1.6.tpg/examples/15.LoadIrrFile/Makefile
+--- irrlicht-1.6/examples/15.LoadIrrFile/Makefile	2009-09-19 14:58:38.000000000 +0000
++++ irrlicht-1.6.tpg/examples/15.LoadIrrFile/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/16.Quake3MapShader/Makefile irrlicht-1.6.tpg/examples/16.Quake3MapShader/Makefile
+--- irrlicht-1.6/examples/16.Quake3MapShader/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/16.Quake3MapShader/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/18.SplitScreen/Makefile irrlicht-1.6.tpg/examples/18.SplitScreen/Makefile
+--- irrlicht-1.6/examples/18.SplitScreen/Makefile	2009-09-19 14:58:38.000000000 +0000
++++ irrlicht-1.6.tpg/examples/18.SplitScreen/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -O3 -ffast-math
+ #CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/19.MouseAndJoystick/Makefile irrlicht-1.6.tpg/examples/19.MouseAndJoystick/Makefile
+--- irrlicht-1.6/examples/19.MouseAndJoystick/Makefile	2009-09-19 14:58:38.000000000 +0000
++++ irrlicht-1.6.tpg/examples/19.MouseAndJoystick/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ #CXXFLAGS = -O3 -ffast-math
+ CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32: CPPFLAGS += -D__GNUWIN32__ -D_WIN32 -DWIN32 -D_WINDOWS -D_MBCS -D_USRDLL
+@@ -28,7 +28,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/20.ManagedLights/Makefile irrlicht-1.6.tpg/examples/20.ManagedLights/Makefile
+--- irrlicht-1.6/examples/20.ManagedLights/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/20.ManagedLights/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ #CXXFLAGS = -O3 -ffast-math
+ CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32: CPPFLAGS += -D__GNUWIN32__ -D_WIN32 -DWIN32 -D_WINDOWS -D_MBCS -D_USRDLL
+@@ -28,7 +28,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/21.Quake3Explorer/Makefile irrlicht-1.6.tpg/examples/21.Quake3Explorer/Makefile
+--- irrlicht-1.6/examples/21.Quake3Explorer/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/21.Quake3Explorer/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -5,7 +5,7 @@
+ Sources = main.cpp sound.cpp q3factory.cpp
+ 
+ # general compiler settings
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ #CXXFLAGS = -O3 -ffast-math
+ CXXFLAGS = -g -Wall
+ 
+@@ -17,7 +17,7 @@
+ endif
+ 
+ # target specific settings
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ all_linux clean_linux: SYSTEM=Linux
+ all_win32: LDFLAGS = -L../../lib/Win32-gcc -lIrrlicht -lopengl32 -lm
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+@@ -27,7 +27,7 @@
+ 
+ all_linux all_win32:
+ 	$(warning Building...)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz -o $(DESTPATH) $(LDFLAGS)
+ 
+ clean: clean_linux clean_win32
+ 	$(warning Cleaning...)
+diff -Naur irrlicht-1.6/examples/Demo/Makefile irrlicht-1.6.tpg/examples/Demo/Makefile
+--- irrlicht-1.6/examples/Demo/Makefile	2009-09-19 14:58:40.000000000 +0000
++++ irrlicht-1.6.tpg/examples/Demo/Makefile	2010-01-27 23:42:54.000000000 +0000
+@@ -2,7 +2,7 @@
+ Target = Demo
+ Sources = CDemo.cpp CMainMenu.cpp main.cpp
+ 
+-CPPFLAGS = -I../../include -I/usr/X11R6/include
++CPPFLAGS = -I../../include -I$(INCLUDEDIR)
+ CXXFLAGS = -Wall -O3 -ffast-math
+ 
+ ifeq ($(HOSTTYPE), x86_64)
+@@ -13,7 +13,7 @@
+ 
+ # target specific settings
+ all_linux: SYSTEM=Linux
+-all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../lib/$(SYSTEM) -lIrrlicht -lGL -lXxf86vm -lXext -lX11
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../lib/$(SYSTEM) -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -ljpeg -lpng -lz
+ 
+ all_win32 clean_win32: SYSTEM=Win32-gcc
+ all_win32: LDFLAGS = -L../../lib/$(SYSTEM) -lIrrlicht -lopengl32 -lm
+diff -Naur irrlicht-1.6/tools/GUIEditor/Makefile irrlicht-1.6.tpg/tools/GUIEditor/Makefile
