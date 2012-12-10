@@ -1,6 +1,6 @@
-diff -Naur irrlicht-1.7.1//source/Irrlicht/Makefile irrlicht-1.7.1.tpg//source/Irrlicht/Makefile
---- irrlicht-1.7.1//source/Irrlicht/Makefile	2010-01-31 15:03:28.000000000 +0000
-+++ irrlicht-1.7.1.tpg//source/Irrlicht/Makefile	2010-08-08 11:18:33.000000000 +0000
+diff -urN irrlicht-1.7.3/source/Irrlicht/Makefile irrlicht-1.7.3-patched/source/Irrlicht/Makefile
+--- irrlicht-1.7.3/source/Irrlicht/Makefile	2012-02-19 23:54:06.000000000 +1100
++++ irrlicht-1.7.3-patched/source/Irrlicht/Makefile	2012-09-29 20:34:17.314566101 +1100
 @@ -39,22 +39,22 @@
  IRRIOOBJ = CFileList.o CFileSystem.o CLimitReadFile.o CMemoryFile.o CReadFile.o CWriteFile.o CXMLReader.o CXMLWriter.o CZipReader.o CPakReader.o CNPKReader.o CTarReader.o CMountPointReader.o irrXML.o CAttributes.o lzma/LzmaDec.o
  IRROTHEROBJ = CIrrDeviceSDL.o CIrrDeviceLinux.o CIrrDeviceConsole.o CIrrDeviceStub.o CIrrDeviceWin32.o CIrrDeviceFB.o CLogger.o COSOperator.o Irrlicht.o os.o
@@ -40,27 +40,21 @@ diff -Naur irrlicht-1.7.1//source/Irrlicht/Makefile irrlicht-1.7.1.tpg//source/I
  
  sharedlib sharedlib_osx: CXXFLAGS += -fPIC
  sharedlib sharedlib_osx: CFLAGS += -fPIC
-@@ -79,11 +79,11 @@
+@@ -79,7 +79,7 @@
  staticlib sharedlib install: SYSTEM = Linux
  STATIC_LIB = libIrrlicht.a
  LIB_PATH = ../../lib/$(SYSTEM)
 -INSTALL_DIR = /usr/local/lib
 +INSTALL_DIR = $(PREFIX)
  sharedlib install: SHARED_LIB = libIrrlicht.so
- staticlib sharedlib: LDFLAGS += --no-export-all-symbols --add-stdcall-alias
--sharedlib: LDFLAGS += -L/usr/X11R6/lib$(LIBSELECT) -lGL -lXxf86vm
--staticlib sharedlib: CXXINCS += -I/usr/X11R6/include
-+sharedlib: LDFLAGS += -L$(LIBDIR) -lGL -lXxf86vm -ljpeg -lpng -lz -lbz2
-+staticlib sharedlib: CXXINCS += -I$(INCLUDEDIR)
- 
- #OSX specific options
- staticlib_osx sharedlib_osx install_osx: SYSTEM = MacOSX
+ #staticlib sharedlib: LDFLAGS += --no-export-all-symbols --add-stdcall-alias
+ sharedlib: LDFLAGS += -L/usr/X11R6/lib$(LIBSELECT) -lGL -lXxf86vm
 @@ -108,7 +108,7 @@
  
  # Builds Irrlicht as shared lib (libIrrlicht.so.versionNumber) and copies it into lib/Linux
  sharedlib: $(LINKOBJ)
--	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -Wl,-soname,$(SHARED_LIB).$(VERSION_MAJOR).$(VERSION_MINOR) -o $(SHARED_LIB).$(VERSION) $^ $(LDFLAGS)
-+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -Wl,-soname,$(SHARED_LIB).$(VERSION_MAJOR).$(VERSION_MINOR) -lX11 -lXext -lXxf86vm -lGL -ljpeg -lpng -lz -lbz2 -o $(SHARED_LIB).$(VERSION) $^ $(LDFLAGS)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -Wl,-soname,$(SHARED_LIB).$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_RELEASE) -o $(SHARED_LIB).$(VERSION) $^ $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -Wl,-soname,$(SHARED_LIB).$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_RELEASE) -lX11 -lXext -lXxf86vm -lGL -ljpeg -lpng -lz -lbz2 -o $(SHARED_LIB).$(VERSION) $^ $(LDFLAGS)
  	mkdir -p $(LIB_PATH)
  	cp $(SHARED_LIB).$(VERSION) $(LIB_PATH)
  

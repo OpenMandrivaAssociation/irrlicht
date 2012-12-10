@@ -1,6 +1,6 @@
 # (tpg) SET VERSION HERE !!!
 %define major 1
-%define minor 7.2
+%define minor 7.3
 
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -9,28 +9,31 @@
 Summary:	The Irrlicht Engine SDK
 Name:		irrlicht
 Version:	%{major}.%{minor}
-Release:	%mkrel 1
+Release:	1
 License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
 Source:		http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch1:		%{name}-1.7.1-library-makefile.patch
-Patch2:		%{name}-1.7.1-use-system-libs.patch
-Patch3:		%{name}-1.7.1-GUIEditor-makefile.patch
-Patch4:		%{name}-1.7.1-IrrFontTool-makefile.patch
-Patch5:		%{name}-1.4-glXGetProcAddress.patch
-Patch6:		%{name}-1.6-examples-makefile.patch
+Patch1:		irrlicht-1.7.3-library-makefile.patch
+Patch2:		irrlicht-1.7.1-use-system-libs.patch
+Patch3:		irrlicht-1.7.1-GUIEditor-makefile.patch
+Patch4:		irrlicht-1.7.3-IrrFontTool-makefile.patch
+Patch6:		irrlicht-1.6-examples-makefile.patch
 Patch7:		irrlicht-1.5.1-glext.patch
+Patch8:		irrlicht-1.7.2-png15.patch
 BuildRequires:	imagemagick
 BuildRequires:	zlib-devel
-BuildRequires:	libjpeg-devel
-BuildRequires:	libpng-devel
-BuildRequires:	mesa-common-devel
-BuildRequires:	libxft-devel
-BuildRequires:	libbzip2-devel
+BuildRequires:	jpeg-devel
+BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xxf86vm)
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xft)
+BuildRequires:	bzip2-devel
 Requires:	%{libname} = %{version}-%{release}
 Requires:	%{name}-media = %{version}-%{release}
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 The Irrlicht Engine is an open source high performance realtime
@@ -101,9 +104,9 @@ User documentation for the Irrlicht 3D engine.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-#%patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 %build
 %setup_compile_flags
@@ -169,10 +172,8 @@ popd
 pushd tools
 cd GUIEditor
 %make CFLAGS="%{optflags}" CXXFLAGS="%{optflags} -ffast-math" LDFLAGS="%{ldflags}"
-cd ..
-cd IrrFontTool/newFontTool
+cd ../IrrFontTool/newFontTool
 %make CFLAGS="%{optflags}" CXXFLAGS="%{optflags}" LDFLAGS="%{ldflags}"
-cd ../..
 popd
 
 # build examples
@@ -276,31 +277,10 @@ StartupNotify=true
 Categories=3DGraphics;GTK;
 EOF
 
-%if %mdkversion < 200900
-%post
-%{update_menus}
-%update_icon_cache hicolor
-%endif
-
-%if %mdkversion < 200900
-%postun
-%{clean_menus}
-%clean_icon_cache hicolor
-%endif
-
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
 %clean
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %doc examples/09.Meshviewer/tutorial.html
 %{_bindir}/irrlicht-GUIEditor
 %{_bindir}/irrlicht-FontTool
@@ -309,21 +289,17 @@ rm -rf %{buildroot}
 %{_iconsdir}/hicolor/*/apps/*.png
 
 %files -n %{libname}
-%defattr(-,root,root)
 %{_libdir}/lib*.so.%{major}*
 
 %files -n %{develname}
-%defattr(-,root,root)
 %dir %{_includedir}/irrlicht
 %{_libdir}/lib*.so
 %{_includedir}/irrlicht/*.h
 
 %files -n %{staticname}
-%defattr(-,root,root)
 %{_libdir}/lib*.a
 
 %files examples
-%defattr(-,root,root)
 %dir %{_docdir}/Irrlicht-examples
 %{_docdir}/Irrlicht-examples/*
 %exclude %{_bindir}/irrlicht-GUIEditor
@@ -337,6 +313,13 @@ rm -rf %{buildroot}
 %{_datadir}/irrlicht/*
 
 %files doc
-%defattr(-,root,root)
-#%doc doc/irrlicht.chm
 %doc doc/*
+
+
+
+%changelog
+* Sat Sep  29 2012 Andrey Bondrov <andrey.bondrov@rosalab.ru>
++ Commit: e21a0f0
+- New version 1.7.3, re-diff some patches, add patch to fix build with libpng15
+  
+  

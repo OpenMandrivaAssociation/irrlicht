@@ -17,7 +17,7 @@ diff -Naur irrlicht-1.7.1//tools/IrrFontTool/newFontTool/Makefile irrlicht-1.7.1
  
  # target specific settings
 -all_linux: LDFLAGS = -L/usr/X11R6/lib$(LIBSELECT) -L../../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXft
-+all_linux: LDFLAGS = -L$(LIBDIR) -L../../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXft -ljpeg -lpng -lz -lbz2
++all_linux: LDFLAGS = -L$(LIBDIR) -L../../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXft -ljpeg -lpng -lz -lbz2 -lfontconfig
  all_linux clean_linux: SYSTEM=Linux
  all_win32: LDFLAGS = -L../../../lib/Win32-gcc -lIrrlicht -lgdi32 -lopengl32 -lglu32 -lm
  all_win32 clean_win32: SYSTEM=Win32-gcc
@@ -26,7 +26,7 @@ diff -Naur irrlicht-1.7.1//tools/IrrFontTool/newFontTool/Makefile irrlicht-1.7.1
  all_linux all_win32:
  	$(warning Building...)
 -	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -o $(DESTPATH) $(LDFLAGS)
-+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXft -ljpeg -lpng -lz -lbz2 -o $(DESTPATH) $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(Sources) -L../../../lib/Linux -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXft -ljpeg -lpng -lz -lbz2 -lfontconfig -o $(DESTPATH) $(LDFLAGS)
  
  clean: clean_linux clean_win32
  	$(warning Cleaning...)

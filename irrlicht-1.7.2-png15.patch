@@ -1,0 +1,66 @@
+diff -up irrlicht-1.7.2/source/Irrlicht/CImageLoaderPNG.cpp.png15 irrlicht-1.7.2/source/Irrlicht/CImageLoaderPNG.cpp
+--- irrlicht-1.7.2/source/Irrlicht/CImageLoaderPNG.cpp.png15	2010-10-24 09:42:46.000000000 -0400
++++ irrlicht-1.7.2/source/Irrlicht/CImageLoaderPNG.cpp	2011-12-06 15:20:25.542576111 -0500
+@@ -28,7 +28,11 @@ namespace video
+ static void png_cpexcept_error(png_structp png_ptr, png_const_charp msg)
+ {
+ 	os::Printer::log("PNG FATAL ERROR", msg, ELL_ERROR);
++#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
++	longjmp(png_jmpbuf(png_ptr),1);
++#else
+ 	longjmp(png_ptr->jmpbuf, 1);
++#endif
+ }
+ 
+ // PNG function for file reading
+@@ -37,7 +41,11 @@ void PNGAPI user_read_data_fcn(png_struc
+ 	png_size_t check;
+ 
+ 	// changed by zola {
++#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
++	io::IReadFile* file=(io::IReadFile*)png_get_io_ptr(png_ptr);
++#else
+ 	io::IReadFile* file=(io::IReadFile*)png_ptr->io_ptr;
++#endif
+ 	check=(png_size_t) file->read((void*)data,(u32)length);
+ 	// }
+ 
+@@ -162,7 +170,11 @@ IImage* CImageLoaderPng::loadImage(io::I
+ 	if (BitDepth < 8)
+ 	{
+ 		if (ColorType==PNG_COLOR_TYPE_GRAY || ColorType==PNG_COLOR_TYPE_GRAY_ALPHA)
++#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
++			png_set_expand_gray_1_2_4_to_8(png_ptr);
++#else
+ 			png_set_gray_1_2_4_to_8(png_ptr);
++#endif
+ 		else
+ 			png_set_packing(png_ptr);
+ 	}
+diff -up irrlicht-1.7.2/source/Irrlicht/CImageWriterPNG.cpp.png15 irrlicht-1.7.2/source/Irrlicht/CImageWriterPNG.cpp
+--- irrlicht-1.7.2/source/Irrlicht/CImageWriterPNG.cpp.png15	2011-12-06 15:20:54.476303641 -0500
++++ irrlicht-1.7.2/source/Irrlicht/CImageWriterPNG.cpp	2011-12-06 15:22:56.424155264 -0500
+@@ -35,7 +35,11 @@ IImageWriter* createImageWriterPNG()
+ static void png_cpexcept_error(png_structp png_ptr, png_const_charp msg)
+ {
+ 	os::Printer::log("PNG FATAL ERROR", msg, ELL_ERROR);
++#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
++	longjmp(png_jmpbuf(png_ptr),1);
++#else
+ 	longjmp(png_ptr->jmpbuf, 1);
++#endif
+ }
+ 
+ // PNG function for file writing
+@@ -43,7 +47,11 @@ void PNGAPI user_write_data_fcn(png_stru
+ {
+ 	png_size_t check;
+ 
++#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
++	io::IWriteFile* file=(io::IWriteFile*)png_get_io_ptr(png_ptr);
++#else
+ 	io::IWriteFile* file=(io::IWriteFile*)png_ptr->io_ptr;
++#endif
+ 	check=(png_size_t) file->write((const void*)data,(u32)length);
+ 
+ 	if (check != length)
