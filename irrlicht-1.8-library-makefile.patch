@@ -1,8 +1,7 @@
-diff -urN irrlicht-1.7.3/source/Irrlicht/Makefile irrlicht-1.7.3-patched/source/Irrlicht/Makefile
---- irrlicht-1.7.3/source/Irrlicht/Makefile	2012-02-19 23:54:06.000000000 +1100
-+++ irrlicht-1.7.3-patched/source/Irrlicht/Makefile	2012-09-29 20:34:17.314566101 +1100
-@@ -39,22 +39,22 @@
- IRRIOOBJ = CFileList.o CFileSystem.o CLimitReadFile.o CMemoryFile.o CReadFile.o CWriteFile.o CXMLReader.o CXMLWriter.o CZipReader.o CPakReader.o CNPKReader.o CTarReader.o CMountPointReader.o irrXML.o CAttributes.o lzma/LzmaDec.o
+--- irrlicht-1.8/source/Irrlicht/Makefile.0001~	2012-11-05 15:13:48.000000000 +0100
++++ irrlicht-1.8/source/Irrlicht/Makefile	2013-01-28 21:05:15.955207118 +0100
+@@ -46,22 +46,21 @@ IRRSWRENDEROBJ = CSoftwareDriver.o CSoft
+ IRRIOOBJ = CFileList.o CFileSystem.o CLimitReadFile.o CMemoryFile.o CReadFile.o CWriteFile.o CXMLReader.o CXMLWriter.o CWADReader.o CZipReader.o CPakReader.o CNPKReader.o CTarReader.o CMountPointReader.o irrXML.o CAttributes.o lzma/LzmaDec.o
  IRROTHEROBJ = CIrrDeviceSDL.o CIrrDeviceLinux.o CIrrDeviceConsole.o CIrrDeviceStub.o CIrrDeviceWin32.o CIrrDeviceFB.o CLogger.o COSOperator.o Irrlicht.o os.o
  IRRGUIOBJ = CGUIButton.o CGUICheckBox.o CGUIComboBox.o CGUIContextMenu.o CGUIEditBox.o CGUIEnvironment.o CGUIFileOpenDialog.o CGUIFont.o CGUIImage.o CGUIInOutFader.o CGUIListBox.o CGUIMenu.o CGUIMeshViewer.o CGUIMessageBox.o CGUIModalScreen.o CGUIScrollBar.o CGUISpinBox.o CGUISkin.o CGUIStaticText.o CGUITabControl.o CGUITable.o CGUIToolBar.o CGUIWindow.o CGUIColorSelectDialog.o CDefaultGUIElementFactory.o CGUISpriteBank.o CGUIImageList.o CGUITreeView.o
 -ZLIBOBJ = zlib/adler32.o zlib/compress.o zlib/crc32.o zlib/deflate.o zlib/inffast.o zlib/inflate.o zlib/inftrees.o zlib/trees.o zlib/uncompr.o zlib/zutil.o
@@ -21,8 +20,7 @@ diff -urN irrlicht-1.7.3/source/Irrlicht/Makefile irrlicht-1.7.3-patched/source/
  	$(IRRVIDEOOBJ) $(IRRSWRENDEROBJ) $(IRRIOOBJ) $(IRROTHEROBJ) \
 -	$(IRRGUIOBJ) $(ZLIBOBJ) $(JPEGLIBOBJ) $(LIBPNGOBJ) $(LIBAESGM) \
 -	$(BZIP2OBJ) $(EXTRAOBJ)
-+	$(IRRGUIOBJ) $(LIBAESGM) \
-+	$(EXTRAOBJ)
++	$(IRRGUIOBJ) $(LIBAESGM) $(BZIP2OBJ) $(EXTRAOBJ)
  
  ###############
  #Compiler flags
@@ -31,7 +29,7 @@ diff -urN irrlicht-1.7.3/source/Irrlicht/Makefile irrlicht-1.7.3-patched/source/
  CPPFLAGS += $(CXXINCS) -DIRRLICHT_EXPORTS=1
  CXXFLAGS += -Wall -pipe -fno-exceptions -fno-rtti -fstrict-aliasing
  ifndef NDEBUG
-@@ -65,7 +65,7 @@
+@@ -72,7 +71,7 @@ endif
  ifdef PROFILE
  CXXFLAGS += -pg
  endif
@@ -40,21 +38,12 @@ diff -urN irrlicht-1.7.3/source/Irrlicht/Makefile irrlicht-1.7.3-patched/source/
  
  sharedlib sharedlib_osx: CXXFLAGS += -fPIC
  sharedlib sharedlib_osx: CFLAGS += -fPIC
-@@ -79,7 +79,7 @@
- staticlib sharedlib install: SYSTEM = Linux
- STATIC_LIB = libIrrlicht.a
- LIB_PATH = ../../lib/$(SYSTEM)
--INSTALL_DIR = /usr/local/lib
-+INSTALL_DIR = $(PREFIX)
- sharedlib install: SHARED_LIB = libIrrlicht.so
- #staticlib sharedlib: LDFLAGS += --no-export-all-symbols --add-stdcall-alias
- sharedlib: LDFLAGS += -L/usr/X11R6/lib$(LIBSELECT) -lGL -lXxf86vm
-@@ -108,7 +108,7 @@
+@@ -121,7 +120,7 @@ all linux: staticlib
  
  # Builds Irrlicht as shared lib (libIrrlicht.so.versionNumber) and copies it into lib/Linux
  sharedlib: $(LINKOBJ)
--	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -Wl,-soname,$(SHARED_LIB).$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_RELEASE) -o $(SHARED_LIB).$(VERSION) $^ $(LDFLAGS)
-+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -Wl,-soname,$(SHARED_LIB).$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_RELEASE) -lX11 -lXext -lXxf86vm -lGL -ljpeg -lpng -lz -lbz2 -o $(SHARED_LIB).$(VERSION) $^ $(LDFLAGS)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -Wl,-soname,$(SONAME) -o $(SHARED_FULLNAME) $^ $(LDFLAGS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -Wl,-soname,$(SONAME) -o $(SHARED_FULLNAME) $^ $(LDFLAGS) -lX11 -lXext -lXxf86vm -lGL -ljpeg -lpng -lz -lbz2
  	mkdir -p $(LIB_PATH)
- 	cp $(SHARED_LIB).$(VERSION) $(LIB_PATH)
+ 	cp $(SHARED_FULLNAME) $(LIB_PATH)
  

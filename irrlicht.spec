@@ -1,6 +1,6 @@
 # (tpg) SET VERSION HERE !!!
 %define major 1
-%define minor 7.3
+%define minor 8
 
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -13,14 +13,12 @@ Release:	1
 License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
-Source:		http://prdownloads.sourceforge.net/irrlicht/%{name}-%{version}.zip
-Patch1:		irrlicht-1.7.3-library-makefile.patch
-Patch2:		irrlicht-1.7.1-use-system-libs.patch
+Source0:	http://heanet.dl.sourceforge.net/project/irrlicht/Irrlicht%20SDK/%version/irrlicht-%version.zip
+Patch1:		irrlicht-1.8-library-makefile.patch
+Patch2:		irrlicht-1.8-use-system-libs.patch
 Patch3:		irrlicht-1.7.1-GUIEditor-makefile.patch
 Patch4:		irrlicht-1.7.3-IrrFontTool-makefile.patch
-Patch6:		irrlicht-1.6-examples-makefile.patch
 Patch7:		irrlicht-1.5.1-glext.patch
-Patch8:		irrlicht-1.7.2-png15.patch
 BuildRequires:	imagemagick
 BuildRequires:	zlib-devel
 BuildRequires:	jpeg-devel
@@ -34,6 +32,8 @@ BuildRequires:	pkgconfig(xft)
 BuildRequires:	bzip2-devel
 Requires:	%{libname} = %{version}-%{release}
 Requires:	%{name}-media = %{version}-%{release}
+# We need a spec-helper that can deal with filenames containing spaces
+BuildRequires:	spec-helper >= 0.31.24
 
 %description
 The Irrlicht Engine is an open source high performance realtime
@@ -100,13 +100,9 @@ User documentation for the Irrlicht 3D engine.
 
 %prep
 %setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
+%apply_patches
+
+find . -name Makefile |xargs sed -i -e 's,-lX11,-lX11 -lz -lpng -ljpeg,g'
 
 %build
 %setup_compile_flags
@@ -164,8 +160,13 @@ sed -i -e 's/0-SVN/1/g' source/Irrlicht/Makefile
 
 # create necessary links to avoid linker-error for tools/examples
 pushd lib/Linux
-ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
-ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so.%{major}
+if echo %minor |grep -q '\.'; then
+	ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
+	ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so.%{major}
+else
+	ln -s libIrrlicht.so.%{major}.%{minor}.0 libIrrlicht.so
+	ln -s libIrrlicht.so.%{major}.%{minor}.0 libIrrlicht.so.%{major}
+fi
 popd
 
 # build tools
