@@ -29,6 +29,7 @@ BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xxf86vm)
 BuildRequires:	pkgconfig(xext)
 BuildRequires:	pkgconfig(xft)
+BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	bzip2-devel
 Requires:	%{libname} = %{version}-%{release}
 Requires:	%{name}-media = %{version}-%{release}
