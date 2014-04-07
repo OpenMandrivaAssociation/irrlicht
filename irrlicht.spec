@@ -9,11 +9,12 @@
 Summary:	The Irrlicht Engine SDK
 Name:		irrlicht
 Version:	%{major}.%{minor}
-Release:	1
+Release:	2
 License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
 Source0:	http://heanet.dl.sourceforge.net/project/irrlicht/Irrlicht%20SDK/%version/irrlicht-%version.zip
+Source1:	%{name}.rpmlintrc
 Patch1:		irrlicht-1.8-library-makefile.patch
 Patch2:		irrlicht-1.8-use-system-libs.patch
 Patch3:		irrlicht-1.7.1-GUIEditor-makefile.patch
