@@ -1,6 +1,5 @@
-# (tpg) SET VERSION HERE !!!
-%define major 1
-%define minor 8
+%define major %(echo %{version} |cut -d. -f1)
+%define minor %(echo %{version} |cut -d. -f2)
 
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -8,12 +7,12 @@
 
 Summary:	The Irrlicht Engine SDK
 Name:		irrlicht
-Version:	%{major}.%{minor}
-Release:	3
+Version:	1.8.4
+Release:	1
 License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
-Source0:	http://heanet.dl.sourceforge.net/project/irrlicht/Irrlicht%20SDK/%version/irrlicht-%version.zip
+Source0:	http://heanet.dl.sourceforge.net/project/irrlicht/Irrlicht%20SDK/%{major}.%{minor}/irrlicht-%version.zip
 Source1:	%{name}.rpmlintrc
 Patch1:		irrlicht-1.8-library-makefile.patch
 Patch2:		irrlicht-1.8-use-system-libs.patch
@@ -143,7 +142,7 @@ sed -i -e 's/0-SVN/1/g' source/Irrlicht/Makefile
 %make -C source/Irrlicht \
     CFLAGS="%{optflags}" \
     CXXFLAGS="%{optflags}" \
-    LDFLAGS="%{ldflags}"
+    LDFLAGS="%{ldflags} -L$(pwd)/lib/Linux"
 
 # clean it
 %make -C source/Irrlicht clean
@@ -162,13 +161,8 @@ sed -i -e 's/0-SVN/1/g' source/Irrlicht/Makefile
 
 # create necessary links to avoid linker-error for tools/examples
 pushd lib/Linux
-if echo %minor |grep -q '\.'; then
-	ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so
-	ln -s libIrrlicht.so.%{major}.%{minor} libIrrlicht.so.%{major}
-else
-	ln -s libIrrlicht.so.%{major}.%{minor}.0 libIrrlicht.so
-	ln -s libIrrlicht.so.%{major}.%{minor}.0 libIrrlicht.so.%{major}
-fi
+ln -s libIrrlicht.so.%{version} libIrrlicht.so
+ln -s libIrrlicht.so.%{version} libIrrlicht.so.%{major}
 popd
 
 # build tools
@@ -253,7 +247,7 @@ Icon=%{name}
 Terminal=false
 Type=Application
 StartupNotify=true
-Categories=3DGraphics;GTK;
+Categories=3DGraphics;
 EOF
 
 cat > %{buildroot}%{_datadir}/applications/irrlicht-FontTool.desktop << EOF
@@ -265,7 +259,7 @@ Icon=%{name}
 Terminal=false
 Type=Application
 StartupNotify=true
-Categories=3DGraphics;GTK;
+Categories=3DGraphics;
 EOF
 
 cat > %{buildroot}%{_datadir}/applications/irrlicht-Meshviewer.desktop << EOF
@@ -277,11 +271,8 @@ Icon=irrlicht-Meshviewer
 Terminal=true
 Type=Application
 StartupNotify=true
-Categories=3DGraphics;GTK;
+Categories=3DGraphics;
 EOF
-
-%clean
-rm -rf %{buildroot}
 
 %files
 %doc examples/09.Meshviewer/tutorial.html
@@ -317,12 +308,3 @@ rm -rf %{buildroot}
 
 %files doc
 %doc doc/*
-
-
-
-%changelog
-* Sat Sep  29 2012 Andrey Bondrov <andrey.bondrov@rosalab.ru>
-+ Commit: e21a0f0
-- New version 1.7.3, re-diff some patches, add patch to fix build with libpng15
-  
-  
