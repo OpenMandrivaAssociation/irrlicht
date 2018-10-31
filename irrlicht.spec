@@ -8,7 +8,7 @@
 Summary:	The Irrlicht Engine SDK
 Name:		irrlicht
 Version:	1.8.4
-Release:	1
+Release:	2
 License:	Zlib
 Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
