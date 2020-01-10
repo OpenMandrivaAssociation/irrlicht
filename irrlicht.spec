@@ -101,7 +101,7 @@ User documentation for the Irrlicht 3D engine.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 find . -name Makefile |xargs sed -i -e 's,-lX11,-lX11 -lz -lpng -ljpeg,g'
 
