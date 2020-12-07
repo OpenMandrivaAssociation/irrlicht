@@ -14,12 +14,13 @@ Group:		Graphics
 URL:		http://irrlicht.sourceforge.net/
 Source0:	http://heanet.dl.sourceforge.net/project/irrlicht/Irrlicht%20SDK/%{major}.%{minor}/irrlicht-%version.zip
 Source1:	%{name}.rpmlintrc
+Patch0:		irrlicht-1.8.4-remove-sys-sysctl.h.patch
 Patch1:		irrlicht-1.8-library-makefile.patch
 Patch2:		irrlicht-1.8-use-system-libs.patch
 Patch3:		irrlicht-1.7.1-GUIEditor-makefile.patch
 Patch4:		irrlicht-1.7.3-IrrFontTool-makefile.patch
 Patch7:		irrlicht-1.5.1-glext.patch
-Patch8:		irrlicht-1.8.4-remove-sys-sysctl.h.patch
+
 
 BuildRequires:	imagemagick
 BuildRequires:	zlib-devel
