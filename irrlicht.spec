@@ -11,7 +11,7 @@ Version:	1.8.4
 Release:	3
 License:	Zlib
 Group:		Graphics
-URL:		http://irrlicht.sourceforge.net/
+URL:		https://irrlicht.sourceforge.net/
 Source0:	http://heanet.dl.sourceforge.net/project/irrlicht/Irrlicht%20SDK/%{major}.%{minor}/irrlicht-%version.zip
 Source1:	%{name}.rpmlintrc
 Patch0:		irrlicht-1.8.4-remove-sys-sysctl.h.patch
